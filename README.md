@@ -2,124 +2,116 @@
 
 ## Overview
 
-This project investigates how different numerical integrators behave when simulating orbital motion in a gravitational two-body system.
+This project presents a computational study of numerical integrators applied to the classical two-body gravitational problem.
 
-The focus of the study is the distinction between **symplectic** and **non-symplectic** integration methods and how this affects long-term stability in dynamical simulations.
+The primary goal is to understand how **symplectic** and **non-symplectic** methods differ in preserving the long-term behavior of Hamiltonian systems.
 
-Three integrators are compared:
+Four integrators are analyzed:
 
-* **Heun Method** (Improved Euler) — non-symplectic
-* **Runge–Kutta 4 (RK4)** — non-symplectic
-* **Velocity Verlet** — symplectic
+- **Heun Method (RK2)** — non-symplectic  
+- **Runge–Kutta 4 (RK4)** — non-symplectic  
+- **Velocity Verlet** — symplectic  
+- **Leapfrog (Kick–Drift–Kick)** — symplectic  
 
-The goal is to analyze how these algorithms influence orbital stability, energy conservation, and radius drift during long simulations.
+The study focuses on how these methods affect orbital stability, conservation laws, and geometric structure over long simulations.
 
 ---
 
 ## Physical Model
 
-The system simulated is the classical **two-body gravitational problem** governed by Newton's law of gravitation:
+The system simulated is the classical **two-body gravitational problem**:
 
-d²r/dt² = −GM r / |r|³
+d²r/dt² = −GM r / |r|³  
 
-where:
+The gravitational parameter is normalized:
 
-* **G** is the gravitational constant
-* **M** is the central mass
-* **r** is the position vector
-
-For simplicity, the gravitational parameter is normalized:
-
-GM = 1
+GM = 1  
 
 Initial conditions correspond to a circular orbit:
 
-Position: (1, 0)
-Velocity: (0, 1)
+Position: (1, 0)  
+Velocity: (0, 1)  
 
 ---
 
 ## Integrators Studied
 
-### Heun Method (Improved Euler)
-
-A second-order predictor–corrector method that improves upon the Euler method by averaging derivatives at two points. Although more accurate than Euler, it does not preserve the Hamiltonian structure of the system.
+### Heun Method (RK2)
+A second-order predictor–corrector scheme. It improves local accuracy over Euler but does not preserve the Hamiltonian structure, leading to energy growth.
 
 ### Runge–Kutta 4 (RK4)
-
-A fourth-order integrator that evaluates the derivative four times per timestep. It significantly reduces local truncation error but is **not symplectic**, meaning long-term energy drift can still occur.
+A fourth-order method with excellent per-step accuracy. However, it is non-symplectic and exhibits slow secular drift over long simulations.
 
 ### Velocity Verlet
+A second-order symplectic integrator widely used in physics. It preserves the geometric structure of phase space, resulting in bounded energy error.
 
-A **symplectic integrator** commonly used in molecular dynamics and orbital simulations. Symplectic methods preserve the geometric structure of Hamiltonian systems, leading to improved long-term stability.
+### Leapfrog
+A symplectic method equivalent to Velocity Verlet in a staggered formulation. It produces identical long-term behavior while using half-step velocity updates.
 
 ---
 
 ## Analysis Performed
 
-The behavior of each integrator is evaluated using several diagnostics:
+The integrators are evaluated using multiple diagnostics:
 
 ### Orbit Geometry
+Trajectory evolution in real space (x, y)
 
-The orbital trajectories are plotted to visually inspect how each method maintains (or distorts) the orbit over time.
+### Energy Conservation
+Absolute energy error over time
 
-### Energy Drift
+### Radius Stability
+Deviation from ideal circular orbit
 
-Specific mechanical energy is tracked throughout the simulation to evaluate how well each integrator conserves energy.
+### Phase Space Structure
+Projected phase space (x, v_x) to analyze geometric preservation
 
-### Radius Drift
+### Angular Momentum Conservation
+Deviation from exact angular momentum
 
-The orbital radius is monitored over time to detect gradual expansion or contraction of the orbit.
-
-### Long-Term Stability
-
-Simulations are run for a large number of timesteps to highlight differences between symplectic and non-symplectic methods.
-
----
-
-## Key Expectations
-
-Typical behavior observed in orbital simulations:
-
-* Non-symplectic methods often show **gradual energy drift** over long timescales.
-* Symplectic integrators tend to keep energy **bounded and oscillatory**, rather than drifting away.
-* This difference becomes more pronounced during long simulations.
+### Timestep Sensitivity
+Maximum energy error vs timestep size (convergence behavior)
 
 ---
 
-## Project Structure
+## Key Results
 
-symplectic-vs-nonsymplectic-integrators/
-
-README.md — project documentation
-symplectic_integrator_analysis.ipynb — main analysis notebook
-LICENSE — MIT license
+- **Heun** exhibits strong energy growth and unstable orbits  
+- **RK4** maintains high short-term accuracy but shows slow secular drift  
+- **Velocity Verlet and Leapfrog** preserve bounded energy and stable trajectories  
+- Symplectic methods maintain phase-space structure and conserved quantities over long times  
+- Velocity Verlet and Leapfrog produce **indistinguishable results**, confirming their equivalence  
 
 ---
 
 ## Tools Used
 
-Python
-NumPy
-Matplotlib
-Google Colab
+- Python  
+- NumPy  
+- Matplotlib  
+- Google Colab  
 
 ---
 
-## Purpose of the Project
+## Purpose
 
-This project demonstrates how algorithmic choices influence the stability of numerical simulations in orbital dynamics. It highlights the importance of symplectic integrators for long-term simulations of Hamiltonian systems such as planetary motion.
+This project demonstrates how **algorithmic structure matters more than order** in long-term simulations of Hamiltonian systems.
+
+It highlights why symplectic integrators are the standard choice in:
+
+- Orbital mechanics  
+- Molecular dynamics  
+- Plasma physics  
+- Long-time dynamical simulations  
 
 ---
 
 ## Future Work
 
-Possible extensions include:
-
-* Implementing Leapfrog and other symplectic schemes
-* Studying angular momentum conservation
-* Performing timestep sensitivity analysis
-* Extending the simulation to N-body systems
+- Extend to elliptical orbits (e ≠ 0)  
+- Perform long-time simulations (10⁵+ steps)  
+- Compare with higher-order symplectic methods  
+- Extend to N-body systems  
 
 ---
 
